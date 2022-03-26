@@ -14,3 +14,4 @@ https://docs.microsoft.com/pt-br/cpp/cpp/main-function-command-line-args?view=ms
 
 ## Criando um arquivo de imagem
 https://stackoverflow.com/questions/19813443/quick-way-to-output-a-picture-in-c#answer-19813498
+https://en.wikipedia.org/wiki/Netpbm#PPM_example

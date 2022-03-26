@@ -30,6 +30,7 @@ void printEnv(char* envp[])
  * @note https://rosettacode.org/wiki/Bitmap/Write_a_PPM_file#C.2B.2B
  * Sobre o formato
  * @note http://paulbourke.net/dataformats/ppm/
+ * @note https://en.wikipedia.org/wiki/Netpbm#PPM_example
  */
 void writePPM()
 {
