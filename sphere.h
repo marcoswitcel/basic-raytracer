@@ -7,13 +7,13 @@
 
 
 struct Sphere {
-    vec3 center;
+    Vec3f center;
     float radius;
 
-    Sphere(const vec3 &c, const float &r) : center(c), radius(r) {}
+    Sphere(const Vec3f &c, const float &r) : center(c), radius(r) {}
 
-    bool ray_intersect(const vec3 &orig, const vec3 &dir, float &t0) const {
-        vec3 L = center - orig;
+    bool ray_intersect(const Vec3f &orig, const Vec3f &dir, float &t0) const {
+        Vec3f L = center - orig;
         float tca = L*dir;
         float d2 = L*L - tca*tca;
         if (d2 > radius*radius) return false;
@@ -26,12 +26,12 @@ struct Sphere {
     }
 };
 
-RGB cast_ray(const vec3 &orig, const vec3 &dir, const Sphere &sphere) {
+RGB cast_ray(const Vec3f &orig, const Vec3f &dir, const Sphere &sphere) {
     float sphere_dist = std::numeric_limits<float>::max();
     if (sphere.ray_intersect(orig, dir, sphere_dist)) {
-        return RGB {0, 255, 0}; // green
+        return RGB {102, 102, 76}; // brown
     }
-    return RGB {0, 0, 255}; // background color blue
+    return RGB {50, 178, 203}; // background color blue
 }
 
 

@@ -82,21 +82,14 @@ void render(const Sphere &sphere)
         buffer: std::vector<RGB>(width * height),
     };
 
-    // for (RGB &color : frameBuffer.buffer) {
-    //     // rgb(50, 178, 203);
-    //     color.r = 50; 
-    //     color.g = 178;
-    //     color.b = 203;
-    // }
     for (size_t j = 0; j<height; j++) {
         for (size_t i = 0; i<width; i++) {
             float x =  (2*(i + 0.5)/(float)width  - 1)*tan(fov/2.)*width/(float)height;
             float y = -(2*(j + 0.5)/(float)height - 1)*tan(fov/2.);
-            vec3 dir = vec3 {x, y, -1};
             // std::cout << "antes  x: " << dir.x << "\n";
-            dir = normalize(dir);
+            Vec3f dir = Vec3f {x, y, -1}.normalize();
             // std::cout << "depois x: " << dir.x << "\n";
-            frameBuffer.buffer[i+j*width] = cast_ray(vec3 { 0, 0, 0 }, dir, sphere);
+            frameBuffer.buffer[i+j*width] = cast_ray(Vec3f { 0, 0, 0 }, dir, sphere);
         }
     }
 
@@ -107,7 +100,7 @@ int main(int argc, char *argv[], char *envp[])
 {
     // printEnv(envp);
 
-    vec3 center = {-3,    0,   -16};
+    Vec3f center = {-3,    0,   -16};
     Sphere sphere(center, 2.0f);
     render(sphere);
 

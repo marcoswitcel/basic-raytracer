@@ -2,69 +2,56 @@
 #define _GEOMETRY_H_
 
 #include <cmath>
+#include <vector>
+#include <cassert>
+#include <iostream>
 
-struct vec3 {
-    float x = 0;
-    float y = 0;
-    float z = 0;
-
-    // vec3(float &x, float &y, float &z) : x(x), y(y), z(z) {}
-
-
+template <size_t DIM, typename T> struct vec {
+    vec() { for (size_t i=DIM; i--; data_[i] = T()); }
+    T& operator[](const size_t i)       { assert(i<DIM); return data_[i]; }
+    const T& operator[](const size_t i) const { assert(i<DIM); return data_[i]; }
+private:
+    T data_[DIM];
 };
 
-vec3 operator*(const vec3 &lhs, const float &rhs)
-{
-    vec3 ret;
-    ret.x = lhs.x * rhs;
-    ret.y = lhs.y * rhs;
-    ret.z = lhs.z * rhs;
-    
+typedef vec<3, float> Vec3f;
+typedef vec<3, int  > Vec3i;
+
+template <typename T> struct vec<3,T> {
+    vec() : x(T()), y(T()), z(T()) {}
+    vec(T X, T Y, T Z) : x(X), y(Y), z(Z) {}
+          T& operator[](const size_t i)       { assert(i<3); return i<=0 ? x : (1==i ? y : z); }
+    const T& operator[](const size_t i) const { assert(i<3); return i<=0 ? x : (1==i ? y : z); }
+    float norm() { return std::sqrt(x*x+y*y+z*z); }
+    vec<3,T> & normalize(T l=1) { *this = (*this)*(l/norm()); return *this; }
+    T x,y,z;
+};
+
+
+template<size_t DIM,typename T> T operator*(const vec<DIM,T>& lhs, const vec<DIM,T>& rhs) {
+    T ret = T();
+    for (size_t i=DIM; i--; ret+=lhs[i]*rhs[i]);
     return ret;
 }
 
-float operator*(const vec3 &lhs, const vec3 &rhs)
-{
-    float ret;
-    ret += lhs.x * rhs.x;
-    ret += lhs.y * rhs.y;
-    ret += lhs.z * rhs.z;
-
-    return ret;
-}
-
-vec3 operator+(vec3 &lhs, const vec3 &rhs)
-{
-    lhs.x += rhs.x;
-    lhs.y += rhs.y;
-    lhs.z += rhs.z;
+template<size_t DIM,typename T>vec<DIM,T> operator+(vec<DIM,T> lhs, const vec<DIM,T>& rhs) {
+    for (size_t i=DIM; i--; lhs[i]+=rhs[i]);
     return lhs;
 }
 
-vec3 operator-(const vec3 &lhs, const vec3 &rhs)
-{
-    vec3 ret;
+template<size_t DIM,typename T>vec<DIM,T> operator-(vec<DIM,T> lhs, const vec<DIM,T>& rhs) {
+    for (size_t i=DIM; i--; lhs[i]-=rhs[i]);
+    return lhs;
+}
 
-    ret.x = lhs.x - rhs.x;
-    ret.y = lhs.y - rhs.y;
-    ret.z = lhs.z - rhs.z;
+template<size_t DIM,typename T,typename U> vec<DIM,T> operator*(const vec<DIM,T> &lhs, const U& rhs) {
+    vec<DIM,T> ret;
+    for (size_t i=DIM; i--; ret[i]=lhs[i]*rhs);
     return ret;
 }
 
-vec3 operator-(const vec3 &lhs)
-{
-    return lhs * (1.0f);
+template<size_t DIM,typename T> vec<DIM,T> operator-(const vec<DIM,T> &lhs) {
+    return lhs*T(-1);
 }
-
-float norm(vec3 &vec)
-{
-    return std::sqrt(vec.x*vec.x+vec.y*vec.y+vec.z*vec.z);
-}
-
-vec3 normalize(vec3 &vec, float l=1)
-{
-    return vec *(l/norm(vec));
-}
-
 
 #endif
