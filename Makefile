@@ -9,3 +9,4 @@ run: a.out
 
 clear:
 	rm ./a.out
+	rm ./image.ppm

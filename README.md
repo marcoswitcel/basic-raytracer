@@ -1,5 +1,8 @@
 # Documentação de estudo e implementação de um Raytracer
 
+O código nesse repositório é baseado no tutorial [Understandable RayTracing in 256 lines of bare C++
+](https://github.com/ssloy/tinyraytracer).
+
 ## Tutorial de exemplo
 https://github.com/ssloy/tinyraytracer/wiki/Part-1:-understandable-raytracing
 
