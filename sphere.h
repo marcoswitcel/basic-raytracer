@@ -5,7 +5,6 @@
 #include <cmath>
 #include <limits>
 
-
 struct Sphere {
     Vec3f center;
     float radius;
@@ -33,6 +32,5 @@ RGB cast_ray(const Vec3f &orig, const Vec3f &dir, const Sphere &sphere) {
     }
     return RGB {50, 178, 203}; // background color blue
 }
-
 
 #endif

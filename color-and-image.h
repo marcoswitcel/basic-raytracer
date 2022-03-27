@@ -1,5 +1,5 @@
-#ifndef _COLOR_AND_IMAGE_
-#define _COLOR_AND_IMAGE_
+#ifndef _COLOR_AND_IMAGE_H_
+#define _COLOR_AND_IMAGE_H_
 
 #include <stdint.h>
 #include <vector>
