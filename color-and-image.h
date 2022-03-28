@@ -4,13 +4,15 @@
 #include <stdint.h>
 #include <vector>
 
-struct RGB {
+struct RGB
+{
     uint8_t r;
     uint8_t g;
     uint8_t b;
 };
 
-struct FrameBuffer {
+struct FrameBuffer
+{
     unsigned int width;
     unsigned int height;
     std::vector<RGB> buffer;
