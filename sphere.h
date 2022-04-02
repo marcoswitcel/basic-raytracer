@@ -12,6 +12,13 @@ struct Material
     Vec3f diffuse_color;
 };
 
+struct Light
+{
+    Light(const Vec3f &p, const float &i) : position(p), intensity(i) {}
+    Vec3f position;
+    float intensity;
+};
+
 struct Sphere
 {
     Vec3f center;
@@ -55,7 +62,7 @@ bool scene_intersect(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphe
     return spheres_dist < 1000;
 }
 
-RGB cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &spheres)
+RGB cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &spheres, const std::vector<Light> &lights)
 {
     Vec3f point, N;
     Material material;
@@ -68,10 +75,21 @@ RGB cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &sph
             (uint8_t)(0.8 * 255),
         }; // background color
     }
+
+    float diffuse_light_intensity = 0;
+
+    for (size_t i = 0; i < lights.size(); i++)
+    {
+        Vec3f light_dir = (lights[i].position - point).normalize();
+        diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * N);
+    }
+
+    Vec3f diffuse_color = material.diffuse_color * diffuse_light_intensity;
+
     return RGB{
-        (uint8_t)(material.diffuse_color.x * 255),
-        (uint8_t)(material.diffuse_color.y * 255),
-        (uint8_t)(material.diffuse_color.z * 255),
+        (uint8_t)(diffuse_color.x * 255),
+        (uint8_t)(diffuse_color.y * 255),
+        (uint8_t)(diffuse_color.z * 255),
     };
 }
 
