@@ -34,6 +34,34 @@ void render(const vector<Sphere> &spheres, const std::vector<Light> &lights)
         }
     }
 
+    for (RGB &rgb : frameBuffer.buffer)
+    {
+        float max = std::max(rgb.r, std::max(rgb.g, rgb.b));
+
+        // @TODO quanto das cores chegam aqui elas já estão dentro do range 0 - 255
+        // if (max > 255.f) {
+        //     rgb = RGB{
+        //         (uint8_t)(255 * ((float) rgb.r) * (255/max)),
+        //         (uint8_t)(255 * ((float) rgb.g) * (255/max)),
+        //         (uint8_t)(255 * ((float) rgb.b) * (255/max)),
+        //     };
+        // }
+
+        rgb.r = std::max(0, std::min(255, (int)rgb.r));
+        rgb.g = std::max(0, std::min(255, (int)rgb.g));
+        rgb.b = std::max(0, std::min(255, (int)rgb.b));
+    }
+
+    // for (size_t i = 0; i < height*width; ++i) {
+    //     Vec3f &c = frameBuffer.buffer[i];
+    //     float max = std::max(c[0], std::max(c[1], c[2]));
+
+    //     if (max>1) c = c*(1./max);
+    //     for (size_t j = 0; j<3; j++) {
+    //         ofs << (char)(255 * std::max(0.f, std::min(1.f, framebuffer[i][j])));
+    //     }
+    // }
+
     saveFrameBuffertoPPMFile(frameBuffer, "image.ppm");
 }
 
@@ -41,8 +69,8 @@ int main(int argc, char *argv[], char *envp[])
 {
     // printEnv(envp);
 
-    Material ivory(Vec3f(0.4, 0.4, 0.3));
-    Material red_rubber(Vec3f(0.3, 0.1, 0.1));
+    Material ivory(Vec2f(0.6, 0.3), Vec3f(0.4, 0.4, 0.3), 50.);
+    Material red_rubber(Vec2f(0.9, 0.1), Vec3f(0.3, 0.1, 0.1), 10.);
 
     vector<Sphere> spheres;
 
@@ -53,6 +81,8 @@ int main(int argc, char *argv[], char *envp[])
 
     vector<Light> lights;
     lights.push_back(Light(Vec3f(-20, 20, 20), 1.5));
+    lights.push_back(Light(Vec3f( 30, 50, -25), 1.8));
+    lights.push_back(Light(Vec3f( 30, 20,  30), 1.7));
 
     render(spheres, lights);
 

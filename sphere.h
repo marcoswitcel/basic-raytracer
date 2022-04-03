@@ -7,9 +7,11 @@
 
 struct Material
 {
-    Material(const Vec3f &color) : diffuse_color(color) {}
-    Material() : diffuse_color() {}
+    Material(const Vec2f &a, const Vec3f &color, const float &spec) : albedo(a), diffuse_color(color), specular_exponent(spec) {}
+    Material() : albedo(1, 0), diffuse_color(), specular_exponent() {}
+    Vec2f albedo;
     Vec3f diffuse_color;
+    float specular_exponent;
 };
 
 struct Light
@@ -62,6 +64,11 @@ bool scene_intersect(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphe
     return spheres_dist < 1000;
 }
 
+Vec3f reflect(const Vec3f &I, const Vec3f &N)
+{
+    return I - N * 2.f * (I * N);
+}
+
 RGB cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &spheres, const std::vector<Light> &lights)
 {
     Vec3f point, N;
@@ -76,15 +83,17 @@ RGB cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &sph
         }; // background color
     }
 
-    float diffuse_light_intensity = 0;
+    float diffuse_light_intensity = 0, specular_light_intensity = 0;
 
     for (size_t i = 0; i < lights.size(); i++)
     {
         Vec3f light_dir = (lights[i].position - point).normalize();
+
         diffuse_light_intensity += lights[i].intensity * std::max(0.f, light_dir * N);
+        specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, N)*dir), material.specular_exponent)*lights[i].intensity;
     }
 
-    Vec3f diffuse_color = material.diffuse_color * diffuse_light_intensity;
+    Vec3f diffuse_color = material.diffuse_color * diffuse_light_intensity * material.albedo[0] + Vec3f(1., 1., 1.)*specular_light_intensity * material.albedo[1];
 
     return RGB{
         (uint8_t)(diffuse_color.x * 255),
