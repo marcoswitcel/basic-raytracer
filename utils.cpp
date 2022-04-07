@@ -59,9 +59,9 @@ void saveFrameBuffertoPPMFile(const FrameBuffer &frameBuffer, const char *filena
         << dimx << ' ' << dimy << endl
         << "255" << endl;
 
-    for (const RGB &color : frameBuffer.buffer)
+    for (const Vec3f &color : frameBuffer.buffer)
     {
-        ofs << (char)color.r << (char)color.g << (char)color.b;
+        ofs << (char)(255 * color.x) << (char)(255 * color.y) << (char)(255 * color.z);
     }
 
     ofs.close();

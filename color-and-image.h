@@ -3,8 +3,9 @@
 
 #include <stdint.h>
 #include <vector>
+#include "geometry.h"
 
-struct RGB
+struct S_RGB
 {
     uint8_t r;
     uint8_t g;
@@ -15,7 +16,7 @@ struct FrameBuffer
 {
     unsigned int width;
     unsigned int height;
-    std::vector<RGB> buffer;
+    std::vector<Vec3f> buffer;
 };
 
 #endif
