@@ -7,9 +7,9 @@
 
 struct Material
 {
-    Material(const Vec2f &a, const Vec3f &color, const float &spec) : albedo(a), diffuse_color(color), specular_exponent(spec) {}
-    Material() : albedo(1, 0), diffuse_color(), specular_exponent() {}
-    Vec2f albedo;
+    Material(const Vec3f &a, const Vec3f &color, const float &spec) : albedo(a), diffuse_color(color), specular_exponent(spec) {}
+    Material() : albedo(1, 0, 0), diffuse_color(), specular_exponent() {}
+    Vec3f albedo;
     Vec3f diffuse_color;
     float specular_exponent;
 };
@@ -69,12 +69,12 @@ Vec3f reflect(const Vec3f &I, const Vec3f &N)
     return I - N * 2.f * (I * N);
 }
 
-Vec3f cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &spheres, const std::vector<Light> &lights)
+Vec3f cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &spheres, const std::vector<Light> &lights, size_t depth = 0)
 {
     Vec3f point, N;
     Material material;
 
-    if (!scene_intersect(orig, dir, spheres, point, N, material))
+    if (depth > 4 || !scene_intersect(orig, dir, spheres, point, N, material))
     {
         return Vec3f{
             0.2,
@@ -82,6 +82,10 @@ Vec3f cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &s
             0.8,
         }; // background color
     }
+
+    Vec3f reflect_dir = reflect(dir, N).normalize();
+    Vec3f reflect_orig = reflect_dir * N < 0 ? point - N * 1e-3 : point + N * 1e-3; // offset the original point to avoid occlusion by the object itself
+    Vec3f reflect_color = cast_ray(reflect_orig, reflect_dir, spheres, lights, depth + 1);
 
     float diffuse_light_intensity = 0, specular_light_intensity = 0;
 
@@ -101,7 +105,7 @@ Vec3f cast_ray(const Vec3f &orig, const Vec3f &dir, const std::vector<Sphere> &s
         specular_light_intensity += powf(std::max(0.f, -reflect(-light_dir, N) * dir), material.specular_exponent) * lights[i].intensity;
     }
 
-    Vec3f diffuse_color = material.diffuse_color * diffuse_light_intensity * material.albedo[0] + Vec3f(1., 1., 1.) * specular_light_intensity * material.albedo[1];
+    Vec3f diffuse_color = material.diffuse_color * diffuse_light_intensity * material.albedo[0] + Vec3f(1., 1., 1.) * specular_light_intensity * material.albedo[1] + reflect_color * material.albedo[2];
 
     return Vec3f{
         diffuse_color.x,
