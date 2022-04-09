@@ -5,7 +5,7 @@ O código nesse repositório é baseado no tutorial [Understandable RayTracing i
 
 ## Estado atual
 
-O código atual reflete uma implementação completa da etapa 5 [https://github.com/ssloy/tinyraytracer/wiki/Part-1:-understandable-raytracing#step-5-specular-lighting](https://github.com/ssloy/tinyraytracer/wiki/Part-1:-understandable-raytracing#step-5-specular-lighting).
+O código atual reflete uma implementação completa da etapa 7 [https://github.com/ssloy/tinyraytracer/wiki/Part-1:-understandable-raytracing#step-7-reflections](https://github.com/ssloy/tinyraytracer/wiki/Part-1:-understandable-raytracing#step-7-reflections).
 
 ## Referências
 
